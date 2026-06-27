@@ -1,0 +1,18 @@
+[
+  {
+    "lot_number": "V_AR230012",
+    "market": "Brazil",
+    "grade_code": "V_AR230012",
+    "status": "RELEASED",
+    "allocated_quantity": 5000,
+    "last_updated": "2026-06-24"
+  },
+  {
+    "lot_number": "V_AR230015",
+    "market": "Zimbabwe",
+    "grade_code": "V_AR230015",
+    "status": "HOLD",
+    "allocated_quantity": 4200,
+    "last_updated": "2026-06-26"
+  }
+]

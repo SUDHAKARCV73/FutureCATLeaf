@@ -41,3 +41,17 @@
 ### Implementation Details
 - Updated extraction instructions in [email_processor.md](file:///d:/AllProjects/FutureCATLeaf/prompts/email_processor.md) to parse process failures and infer business impact (e.g., `"Unable to make plan final" -> "Processing plan cannot be finalized, which may block downstream processing activities."`).
 - Verified execution on `Incident_unable_to_make_plan_final.txt`. It correctly returned the inferred business impact string and downgraded overall confidence to `"Medium"`.
+
+## [2026-06-27] Phase 2: Investigation Agent Implementation
+
+### Objectives
+- Build an Investigation Agent to collect facts and evidence from local mock resources.
+- Do not conclude root cause, draft RCAs, or make decisions—gather evidence in a neutral manner.
+- Keep `rca`, `investigation`, and `approval` fields as `null`.
+
+### Implementation Details
+- Created mock files in `resources/` covering logs, deployments, master data (lot master, shift calendar), and past RCAs.
+- Implemented custom search tools in [resource_tools.py](file:///d:/AllProjects/FutureCATLeaf/tools/resource_tools.py) to read and filter these files.
+- Configured the Investigation Agent in [investigation_agent.py](file:///d:/AllProjects/FutureCATLeaf/agents/investigation_agent.py) with prompts in [investigation_agent.md](file:///d:/AllProjects/FutureCATLeaf/prompts/investigation_agent.md).
+- Updated [main.py](file:///d:/AllProjects/FutureCATLeaf/main.py) to sequentially run the **Email Processor Agent**, parse its output, run the **Investigation Agent** with the output, and print the final JSON.
+- Verified evidence retrieval on both plan finalization and lot printing incidents.

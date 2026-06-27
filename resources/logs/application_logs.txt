@@ -1,0 +1,8 @@
+2026-06-25 08:30:15 [ERROR] [PRINTING] Label print failure for Lot V_AR230012: variable 'lot_number' resolved to empty/null. Output screen: Packed Output screen.
+2026-06-25 14:15:22 [INFO] [SHIPMENT] Customer shipment process initiated for Case CS-99201. Target destination: Chile.
+2026-06-25 14:18:01 [WARNING] [SHIPMENT] Case CS-99201 has status 'REJECTED' in QA tables but was processed through Customer Shipment Screen without validation halt.
+2026-06-26 09:44:12 [ERROR] [PLANNING] Oracle DB Error while finalising Processing Plan PL-202606-883. Error: ORA-20001: No shifts defined for processing week starting 2026-06-22. Market: Ghana.
+2026-06-26 11:02:44 [ERROR] [INVENTORY] Unable to issue bale BL-883011 to Feeding Line. Error message: invalid bale status. Current state in system: Physical bale available but status code set to quarantined.
+2026-06-26 15:30:59 [INFO] [PRINTING] Case case reprinter Reprinter-V2 generated case case reprint request for Zimbabwe.
+2026-06-26 15:31:05 [ERROR] [PRINTING] Reprinting processes output screen: reprint data resolved to old grade code V_AR230012 instead of updated regraded code V_AR230015.
+2026-06-27 10:15:33 [ERROR] [PRINTING] packed case output screen error: net weight parsed as 200.1 Kgs instead of target 200.0 Kgs. Case Case-901123, Destination market: Zimbabwe.

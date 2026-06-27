@@ -1,0 +1,30 @@
+[
+  {
+    "market": "Ghana",
+    "week_start": "2026-06-08",
+    "week_end": "2026-06-14",
+    "shifts_defined": 15,
+    "status": "APPROVED"
+  },
+  {
+    "market": "Ghana",
+    "week_start": "2026-06-15",
+    "week_end": "2026-06-21",
+    "shifts_defined": 15,
+    "status": "APPROVED"
+  },
+  {
+    "market": "Ghana",
+    "week_start": "2026-06-22",
+    "week_end": "2026-06-28",
+    "shifts_defined": 0,
+    "status": "DRAFT"
+  },
+  {
+    "market": "Zimbabwe",
+    "week_start": "2026-06-22",
+    "week_end": "2026-06-28",
+    "shifts_defined": 18,
+    "status": "APPROVED"
+  }
+]
