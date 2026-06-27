@@ -1,0 +1,13 @@
+Subject: After regrading, label printing old grade
+
+Dear team, 
+
+IN0061073
+After regrading generating cases the packed case label is getting printed with old grade using the reprinting processes. We can wait for 3 to 4 days for this issue to be resolved.
+
+End market: Zimbabwe 
+
+
+Please find and confirm the root cause.
+Regards, 
+Donald

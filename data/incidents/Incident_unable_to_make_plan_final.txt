@@ -1,0 +1,17 @@
+Subject: Unable to make plan final.
+
+Dear Team, 
+
+Incident No: IN065034
+
+we are unable to make the processing plan final. It gives an oracle error saying no shifts available but I have defined the shifts for the week. 
+issue observed in processing plan
+
+End market: Ghana
+Priority:P2
+
+
+Please find and confirm the root cause.
+
+Regards,
+Seena

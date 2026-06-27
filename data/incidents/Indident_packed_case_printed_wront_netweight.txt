@@ -1,0 +1,15 @@
+Subject: Label printing wrong weight
+
+Dear team, 
+IN005035
+
+While generating cases the packed case label is getting printed with net weight 200.1 instead of 200Kgs.
+
+Issue observed in packed case output screen that generates lables.
+End market: Zimbabwe 
+Priority:P2
+Process: Packed case output.
+
+Please find and confirm the root cause.
+Regards, 
+Donald

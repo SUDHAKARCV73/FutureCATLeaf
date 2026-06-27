@@ -1,0 +1,11 @@
+subject: unable to issue bales to feeding line
+Dear team,
+
+Incident: IN005003 
+
+We are unable to issue green bales to the feeding line. It is saying invalid bale even though physical bale is available. It is very urgent as any leftover bales can cause financial loss.
+End market: China
+
+
+Please find and confirm the root cause.
+Rosaline

@@ -1,4 +1,5 @@
 import os
+import sys
 import asyncio
 import warnings
 
@@ -8,7 +9,6 @@ warnings.filterwarnings("ignore")
 from dotenv import load_dotenv
 from agents.email_processor import get_email_processor_agent
 from google.adk.runners import Runner
-
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 
@@ -16,7 +16,7 @@ from google.genai import types
 dotenv_path = os.path.join(os.getcwd(), ".env")
 load_dotenv(dotenv_path=dotenv_path)
 
-async def run_agent():
+async def run_agent(filename: str):
     # 1. Initialize the Email Processing Agent
     agent = get_email_processor_agent()
     
@@ -35,8 +35,17 @@ async def run_agent():
         session_service=session_service
     )
     
-    # 3. Formulate the user instruction
-    email_file_path = os.path.join("data", "incidents", "incident_lot_number.txt")
+    # 3. Resolve the email file path (either direct path or relative to data/incidents/)
+    if os.path.exists(filename):
+        email_file_path = filename
+    else:
+        email_file_path = os.path.join("data", "incidents", filename)
+        
+    if not os.path.exists(email_file_path):
+        print(f"Error: File '{filename}' not found directly or in 'data/incidents/'.")
+        return
+
+    # 4. Formulate the user instruction
     user_prompt = f"Please read the email from the file '{email_file_path}' and extract the structured incident object as pure JSON."
     
     user_message = types.Content(
@@ -44,14 +53,14 @@ async def run_agent():
         parts=[types.Part.from_text(text=user_prompt)]
     )
     
-    # 4. Execute the agent runner using the active session ID
+    # 5. Execute the agent runner using the active session ID
     events = runner.run(
         user_id="user_console",
         session_id=session.id,
         new_message=user_message
     )
     
-    # 5. Gather response content from events
+    # 6. Gather response content from events
     full_response = ""
     for event in events:
         if event.content and event.content.parts:
@@ -59,8 +68,18 @@ async def run_agent():
                 if part.text:
                     full_response += part.text
                     
-    # Clean and output the JSON result
-    print(full_response.strip())
+    # Clean the response to ensure no markdown blocks are present in stdout
+    response_text = full_response.strip()
+    if response_text.startswith("```json"):
+        response_text = response_text[7:]
+    elif response_text.startswith("```"):
+        response_text = response_text[3:]
+        
+    if response_text.endswith("```"):
+        response_text = response_text[:-3]
+        
+    response_text = response_text.strip()
+    print(response_text)
 
 def main():
     if not os.environ.get("GEMINI_API_KEY"):
@@ -69,7 +88,14 @@ def main():
         print("Example: GEMINI_API_KEY=AIzaSy...")
         return
         
-    asyncio.run(run_agent())
+    # Check if a filename/path parameter was passed
+    if len(sys.argv) < 2:
+        print("Usage: python main.py <incident_file_path>")
+        print("Example: python main.py data/incidents/incident_lot_number.txt")
+        return
+        
+    filename = sys.argv[1]
+    asyncio.run(run_agent(filename))
 
 if __name__ == "__main__":
     main()

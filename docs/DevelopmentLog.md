@@ -17,3 +17,17 @@
 - Improved prompt instructions in `prompts/email_processor.md` to set `module` to `"Packed Output"` when `impacted_screen` contains `"Packed Output screen"`.
 - Improved default/missing information rule to identify missing support data: `"Error logs, active lot number status, recent deployment details"`.
 - Verified warning-free clean JSON execution in terminal output.
+
+## [2026-06-27] V2 Enhancements: Dynamic Ingestion, Extra Fields, and Confidence Ratings
+
+### Objectives
+- Support processing any incident file path provided as a command-line parameter.
+- Print helpful usage instructions if no path is provided.
+- Add five new schema fields: `business_impact`, `reported_by`, `reported_date`, `confidence` (string value: `"High"`, `"Medium"`, or `"Low"`), and `attachments`.
+- Enforce robustness across writing styles and spelling variants.
+
+### Implementation Details
+- Updated [main.py](file:///d:/AllProjects/FutureCATLeaf/main.py) to check for input arguments. If `len(sys.argv) < 2`, it shows a usage help message and exits.
+- Resolves absolute/relative paths and handles errors if the file doesn't exist.
+- Enhanced [email_processor.md](file:///d:/AllProjects/FutureCATLeaf/prompts/email_processor.md) to define the new fields. Configured `confidence` to be a single string. If key fields (e.g. `module`, `process`, `priority`) are inferred, confidence is downgraded to `"Medium"` or `"Low"`.
+- Added output cleaning to [main.py](file:///d:/AllProjects/FutureCATLeaf/main.py) to ensure clean JSON stdout without code block wrappers.

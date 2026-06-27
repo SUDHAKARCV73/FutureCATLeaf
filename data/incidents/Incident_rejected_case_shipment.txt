@@ -1,0 +1,15 @@
+Subject: Rejected packed case shipped to customer
+
+Dear Team, 
+
+Ticket id: IN0045503.
+We have observed that the rejected packed case is shipped to the customer via customer shipment process.
+
+Issue observed in customer shipment process. 
+End Market: Chile
+Process: customer shipment process. 
+
+Please identify the root cause.
+
+Regards,
+
