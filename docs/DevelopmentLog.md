@@ -31,3 +31,13 @@
 - Resolves absolute/relative paths and handles errors if the file doesn't exist.
 - Enhanced [email_processor.md](file:///d:/AllProjects/FutureCATLeaf/prompts/email_processor.md) to define the new fields. Configured `confidence` to be a single string. If key fields (e.g. `module`, `process`, `priority`) are inferred, confidence is downgraded to `"Medium"` or `"Low"`.
 - Added output cleaning to [main.py](file:///d:/AllProjects/FutureCATLeaf/main.py) to ensure clean JSON stdout without code block wrappers.
+
+## [2026-06-27] V2 Refinement: Business Impact Inference
+
+### Objectives
+- Automatically infer concise business impact statements when a user reports being unable to complete key processes (e.g., plan finalization, print label, sync mobile, etc.).
+- Ensure overall extraction confidence is restricted to `"Medium"` or `"Low"` if the business impact is inferred.
+
+### Implementation Details
+- Updated extraction instructions in [email_processor.md](file:///d:/AllProjects/FutureCATLeaf/prompts/email_processor.md) to parse process failures and infer business impact (e.g., `"Unable to make plan final" -> "Processing plan cannot be finalized, which may block downstream processing activities."`).
+- Verified execution on `Incident_unable_to_make_plan_final.txt`. It correctly returned the inferred business impact string and downgraded overall confidence to `"Medium"`.

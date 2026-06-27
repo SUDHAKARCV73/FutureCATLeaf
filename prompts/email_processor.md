@@ -34,10 +34,10 @@ You must output a JSON object containing exactly the following keys:
 - `investigation`: (null) Hardcoded to `null`.
 - `rca`: (null) Hardcoded to `null`.
 - `approval`: (null) Hardcoded to `null`.
-- `business_impact`: (string) The direct impact to business operations (e.g., "financial loss due to leftover bales", "delay shipment to customer", "needs resolution in 3-4 days"), or "Not provided".
+- `business_impact`: (string) The direct impact to business operations. If not explicitly provided, but the email states that a user is unable to complete a key process (such as make plan final, print label, sync mobile, transfer file, approve UAT, or complete shipment), infer a concise business impact (for example, "Unable to make plan final" -> "Processing plan cannot be finalized, which may block downstream processing activities."). If no impact is specified or inferable, default to "Not provided".
 - `reported_by`: (string) The name of the person reporting the issue (e.g., "Seena", "Donald", "Rosaline"). If not specified, default to `"Unknown"`.
 - `reported_date`: (string) The date the incident was reported if explicitly stated in the email. If not specified, default to `"Unknown"`.
-- `confidence`: (string) The overall extraction confidence. Must be one of `"High"`, `"Medium"`, or `"Low"`. If important fields (such as `module`, `process`, or `priority`) are inferred based on context/clues rather than being explicitly stated in the email text, set this to `"Medium"` or `"Low"`. If all key fields are explicitly stated in the email, set this to `"High"`.
+- `confidence`: (string) The overall extraction confidence. Must be one of `"High"`, `"Medium"`, or `"Low"`. If important fields (such as `module`, `process`, `priority`, or `business_impact`) are inferred based on context/clues rather than being explicitly stated in the email text, set this to `"Medium"` or `"Low"`. Keep confidence `"Medium"` (or `"Low"`) if `business_impact` is inferred. If all key fields are explicitly stated in the email, set this to `"High"`.
 - `attachments`: (array of strings) Hardcoded to `[]`.
 
 ## Execution Flow
