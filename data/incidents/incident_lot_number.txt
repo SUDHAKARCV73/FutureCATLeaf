@@ -1,0 +1,17 @@
+Subject: Lot number not printing on packed label
+
+Dear Team,
+
+Business has reported that the lot number is not getting printed on the packed label, although the lot number is available in the processing plan.
+
+Issue observed in Packed Output screen.
+
+Packed Grade Code: V_AR230012
+End Market: Brazil
+Priority: High
+Process: Packed Label Printing
+
+Please check and confirm the root cause.
+
+Regards,
+Support Team
