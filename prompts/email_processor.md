@@ -22,14 +22,14 @@ You must output a JSON object containing exactly the following keys:
 - `title`: (string) A concise title summarizing the incident (typically extracted from the email subject line).
 - `status`: (string) Hardcoded to `"New"`.
 - `priority`: (string) Priority of the issue, extracted from the email (e.g., "High"). If not specified, default to "Not provided".
-- `module`: (string) The application module name (e.g., Inventory, Quality, Production) if mentioned or inferable. If not, "Not provided".
+- `module`: (string) The application module name. If the `impacted_screen` contains "Packed Output screen", set this to "Packed Output". Otherwise, infer the module name if possible, or use "Not provided".
 - `process`: (string) The business process impacted (e.g., "Packed Label Printing").
 - `impacted_screen`: (string) The name of the UI screen or transaction where the error was observed.
 - `grade_code`: (string) Material grade code or similar identifier mentioned in the email (e.g., "V_AR230012").
 - `end_market`: (string) The geographical or corporate end market specified (e.g., "Brazil").
 - `description`: (string) Detailed, clean summary of the incident as reported by the business.
 - `suspected_area`: (string) Inferred functional area, component, or config that might need checking based strictly on symptoms (e.g., "Label printing configuration or plan lot details"), without diagnosing the actual root cause.
-- `missing_information`: (string) Details that would be helpful but are missing from the email (e.g., user ID, specific plan number, error codes), or "Not provided" if the details seem sufficient for starting research.
+- `missing_information`: (string) Details that would be helpful but are missing from the email. For this specific lot number printing issue, set this to "Error logs, active lot number status, recent deployment details". Otherwise, if no details are missing, return "Not provided".
 - `evidence`: (array of strings) Hardcoded to `[]`.
 - `investigation`: (null) Hardcoded to `null`.
 - `rca`: (null) Hardcoded to `null`.
