@@ -1,7 +1,9 @@
 import os
 import sys
+import json
 import asyncio
 import warnings
+import datetime
 
 # Suppress experimental/deprecation warnings to ensure clean JSON stdout
 warnings.filterwarnings("ignore")
@@ -10,6 +12,7 @@ from dotenv import load_dotenv
 from agents.email_processor import get_email_processor_agent
 from agents.investigation_agent import get_investigation_agent
 from agents.rca_agent import get_rca_agent
+from agents.review_agent import get_review_agent
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
@@ -46,7 +49,6 @@ async def run_pipeline(filename: str):
         print(f"Error: File '{filename}' not found directly or in 'data/incidents/'.")
         return
 
-    # User instruction for step 1
     user_prompt1 = f"Please read the email from the file '{email_file_path}' and extract the structured incident object as pure JSON."
     user_message1 = types.Content(
         role="user",
@@ -91,7 +93,6 @@ async def run_pipeline(filename: str):
         session_service=session_service
     )
     
-    # Pass the Incident JSON to the Investigation Agent
     user_prompt2 = f"Please investigate the resources for this Incident Object and return the updated object with evidence populated:\n{incident_json}"
     user_message2 = types.Content(
         role="user",
@@ -112,7 +113,6 @@ async def run_pipeline(filename: str):
                 if part.text:
                     response_investigation += part.text
                     
-    # Clean response
     investigation_json = response_investigation.strip()
     if investigation_json.startswith("```json"):
         investigation_json = investigation_json[7:]
@@ -136,7 +136,6 @@ async def run_pipeline(filename: str):
         session_service=session_service
     )
     
-    # Pass the populated Incident JSON to the RCA Agent
     user_prompt3 = f"Please perform an evidence-based root cause analysis for this Incident Object and return the updated object with the structured rca field populated:\n{investigation_json}"
     user_message3 = types.Content(
         role="user",
@@ -157,7 +156,6 @@ async def run_pipeline(filename: str):
                 if part.text:
                     response_rca += part.text
 
-    # Clean output JSON to ensure pure raw JSON stdout
     final_output = response_rca.strip()
     if final_output.startswith("```json"):
         final_output = final_output[7:]
@@ -166,8 +164,94 @@ async def run_pipeline(filename: str):
     if final_output.endswith("```"):
         final_output = final_output[:-3]
     final_output = final_output.strip()
+
+    # ----------------------------------------------------
+    # Display Summary to Console
+    # ----------------------------------------------------
+    try:
+        data = json.loads(final_output)
+        print("\n" + "="*60)
+        print("FUNCTIONAL INVESTIGATION REPORT SUMMARY")
+        print("="*60)
+        print(f"Incident ID: {data.get('incident_id')}")
+        print(f"Title:       {data.get('title')}")
+        print(f"End Market:  {data.get('end_market')}")
+        rca_data = data.get('rca', {})
+        if isinstance(rca_data, dict):
+            print(f"Diagnosis:   {rca_data.get('final_diagnosis')}")
+            print(f"Workaround:  {rca_data.get('workaround')}")
+            print(f"Corrective:  {rca_data.get('corrective_action')}")
+        print("="*60 + "\n")
+    except Exception as e:
+        print("Warning: Could not parse report summary for display:", e)
+
+    # ----------------------------------------------------
+    # Step 4: Human Review Interaction
+    # ----------------------------------------------------
+    reviewer_name = input("Enter reviewer name: ").strip()
+    if not reviewer_name:
+        reviewer_name = "Console User"
+        
+    approval_choice = input("Approve report? (Y/N): ").strip().upper()
     
-    print(final_output)
+    if approval_choice == "Y":
+        status = "Approved"
+        comments = input("Enter review comments (optional): ").strip()
+    else:
+        status = "Needs Revision"
+        comments = input("Enter review comments: ").strip()
+        
+    current_date = datetime.date.today().isoformat()
+
+    review_agent = get_review_agent()
+    session4 = await session_service.create_session(
+        app_name="FutureCATLeaf_Review",
+        user_id="user_console"
+    )
+    runner4 = Runner(
+        app_name="FutureCATLeaf_Review",
+        agent=review_agent,
+        session_service=session_service
+    )
+    
+    user_prompt4 = (
+        f"Please update the approval field for this Incident Object with the following metadata:\n"
+        f"- Status: {status}\n"
+        f"- Reviewer: {reviewer_name}\n"
+        f"- Comments: {comments}\n"
+        f"- Date: {current_date}\n\n"
+        f"Incident JSON:\n{final_output}"
+    )
+    
+    user_message4 = types.Content(
+        role="user",
+        parts=[types.Part.from_text(text=user_prompt4)]
+    )
+    
+    # Execute step 4 runner
+    events4 = runner4.run(
+        user_id="user_console",
+        session_id=session4.id,
+        new_message=user_message4
+    )
+    
+    response_review = ""
+    for event in events4:
+        if event.content and event.content.parts:
+            for part in event.content.parts:
+                if part.text:
+                    response_review += part.text
+
+    final_reviewed_output = response_review.strip()
+    if final_reviewed_output.startswith("```json"):
+        final_reviewed_output = final_reviewed_output[7:]
+    elif final_reviewed_output.startswith("```"):
+        final_reviewed_output = final_reviewed_output[3:]
+    if final_reviewed_output.endswith("```"):
+        final_reviewed_output = final_reviewed_output[:-3]
+    final_reviewed_output = final_reviewed_output.strip()
+    
+    print(final_reviewed_output)
 
 def main():
     if not os.environ.get("GEMINI_API_KEY"):
