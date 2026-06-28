@@ -9,6 +9,7 @@ warnings.filterwarnings("ignore")
 from dotenv import load_dotenv
 from agents.email_processor import get_email_processor_agent
 from agents.investigation_agent import get_investigation_agent
+from agents.rca_agent import get_rca_agent
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
@@ -111,8 +112,53 @@ async def run_pipeline(filename: str):
                 if part.text:
                     response_investigation += part.text
                     
+    # Clean response
+    investigation_json = response_investigation.strip()
+    if investigation_json.startswith("```json"):
+        investigation_json = investigation_json[7:]
+    elif investigation_json.startswith("```"):
+        investigation_json = investigation_json[3:]
+    if investigation_json.endswith("```"):
+        investigation_json = investigation_json[:-3]
+    investigation_json = investigation_json.strip()
+
+    # ----------------------------------------------------
+    # Step 3: Run RCA Agent
+    # ----------------------------------------------------
+    rca_agent = get_rca_agent()
+    session3 = await session_service.create_session(
+        app_name="FutureCATLeaf_RCA",
+        user_id="user_console"
+    )
+    runner3 = Runner(
+        app_name="FutureCATLeaf_RCA",
+        agent=rca_agent,
+        session_service=session_service
+    )
+    
+    # Pass the populated Incident JSON to the RCA Agent
+    user_prompt3 = f"Please perform an evidence-based root cause analysis for this Incident Object and return the updated object with the structured rca field populated:\n{investigation_json}"
+    user_message3 = types.Content(
+        role="user",
+        parts=[types.Part.from_text(text=user_prompt3)]
+    )
+    
+    # Execute step 3 runner
+    events3 = runner3.run(
+        user_id="user_console",
+        session_id=session3.id,
+        new_message=user_message3
+    )
+    
+    response_rca = ""
+    for event in events3:
+        if event.content and event.content.parts:
+            for part in event.content.parts:
+                if part.text:
+                    response_rca += part.text
+
     # Clean output JSON to ensure pure raw JSON stdout
-    final_output = response_investigation.strip()
+    final_output = response_rca.strip()
     if final_output.startswith("```json"):
         final_output = final_output[7:]
     elif final_output.startswith("```"):

@@ -55,3 +55,36 @@
 - Configured the Investigation Agent in [investigation_agent.py](file:///d:/AllProjects/FutureCATLeaf/agents/investigation_agent.py) with prompts in [investigation_agent.md](file:///d:/AllProjects/FutureCATLeaf/prompts/investigation_agent.md).
 - Updated [main.py](file:///d:/AllProjects/FutureCATLeaf/main.py) to sequentially run the **Email Processor Agent**, parse its output, run the **Investigation Agent** with the output, and print the final JSON.
 - Verified evidence retrieval on both plan finalization and lot printing incidents.
+
+## [2026-06-27] Phase 2 Refinement: Evidence Schema Extension & Fallback Filtering
+
+### Objectives
+- Extend the evidence object schema to include `"resource"` (the filename searched) and `"reason"` (relevance justification).
+- Do not add the fallback evidence item if at least one matching evidence item has already been successfully identified.
+- Ensure the agent remains strictly neutral, explaining *only* the facts and their relevance, and never stating a Root Cause, Fix, or Recommendation.
+
+### Implementation Details
+- Modified [investigation_agent.md](file:///d:/AllProjects/FutureCATLeaf/prompts/investigation_agent.md) to include the updated schema layout, strict neutrality guidelines, and conditional fallback instruction.
+- Verified output schemas on both plan finalization and lot number printing mock incidents.
+
+## [2026-06-28] Phase 3: Evidence-Based Root Cause Reasoning Agent Implementation
+
+### Objectives
+- Build an RCA Agent (Root Cause Analysis Agent) to evaluate gathered evidence and populate a structured `rca` object.
+- Integrate the agent into a 3-agent sequential pipeline: `Email Processor Agent` ➔ `Investigation Agent` ➔ `RCA Agent`.
+- Follow strict safety guidelines: no database SQL modifications, safe validation actions, and keep `approval` as `null`.
+
+### Implementation Details
+- Created [rca_agent.md](file:///d:/AllProjects/FutureCATLeaf/prompts/rca_agent.md) defining the detailed structured schema for the `rca` field, including hypothesis matrices and confidence scores.
+- Created [rca_agent.py](file:///d:/AllProjects/FutureCATLeaf/agents/rca_agent.py) configuring the ADK Agent.
+- Modified [main.py](file:///d:/AllProjects/FutureCATLeaf/main.py) to chain all three agents in order, passing clean JSON outputs between them and suppressing user warnings.
+- Verified the final output on `Incident_unable_to_make_plan_final.txt`. It correctly retains all 21 schema fields and populates the structured `rca` object.
+
+## [2026-06-28] Phase 3 Refinement: Validation Steps List Formatting
+
+### Objectives
+- Modify the `recommended_validation_steps` schema from a single string to an array of strings representing a list of validation steps.
+
+### Implementation Details
+- Updated prompt instructions in [rca_agent.md](file:///d:/AllProjects/FutureCATLeaf/prompts/rca_agent.md) to define `recommended_validation_steps` as an `(array of strings)`.
+- Verified formatting output in batch check runs. It correctly formatted validation steps as an array.
