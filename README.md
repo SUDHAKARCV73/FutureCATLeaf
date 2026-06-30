@@ -311,13 +311,13 @@ These outputs provide both human-readable documentation and machine-readable aud
 
 ![Investigation](docs/Screenshots/03-investigation-and-rca.png)
 
+### Human Review
+
+![Human Review](docs/Screenshots/04-human-review.png)
+
 ### Generated Markdown Report
 
 ![Markdown Report](docs/Screenshots/06-markdown-report.png)
-
-### Repository Homepage
-
-![Repository](docs/Screenshots/07-github-home.png)
 
 ### Security
 
