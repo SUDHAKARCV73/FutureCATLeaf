@@ -301,9 +301,23 @@ A structured JSON document containing:
 
 These outputs provide both human-readable documentation and machine-readable audit records.
 
-## Security & Responsible AI
+## Screenshots
 
-FutureCATLeaf has been designed following responsible AI and secure development practices.
+### Application Execution
+
+![Terminal Run](docs/Screenshots/01-terminal-run.png)
+
+### Evidence and Root Cause Analysis
+
+![Investigation](docs/Screenshots/03-investigation-and-rca.png)
+
+### Generated Markdown Report
+
+![Markdown Report](docs/Screenshots/06-markdown-report.png)
+
+### Repository Homepage
+
+![Repository](docs/Screenshots/07-github-home.png)
 
 ### Security
 
