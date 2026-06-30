@@ -12,6 +12,7 @@ def search_application_logs(query: str) -> str:
     Returns:
         A string containing matching log lines, or a message indicating no matches.
     """
+    print(f"DEBUG: search_application_logs called with query='{query}'")
     log_file = os.path.join(RESOURCES_DIR, "logs", "application_logs.txt")
     if not os.path.exists(log_file):
         return "Log file not found."
@@ -23,9 +24,9 @@ def search_application_logs(query: str) -> str:
             if query_lower in line.lower():
                 matches.append(line.strip())
                 
-    if matches:
-        return "\n".join(matches)
-    return "No matching log entries found."
+    result = "\n".join(matches) if matches else "No matching log entries found."
+    print(f"DEBUG: search_application_logs result: {result}")
+    return result
 
 def read_deployment_history() -> str:
     """Reads the entire deployment history markdown file.
@@ -98,3 +99,37 @@ def search_knowledge_base(query: str) -> str:
     if matches:
         return "\n".join(matches)
     return "No matching records found in the knowledge base."
+
+def search_functional_documentation(query: str) -> str:
+    """Searches functional documentation markdown files. If a file name or file content matches the query, returns the complete content of that file.
+
+    Args:
+        query: The search term or keyword (e.g. 'shift', 'bale', 'label').
+
+    Returns:
+        The text content of the matching documentation files.
+    """
+    print(f"DEBUG: search_functional_documentation called with query='{query}'")
+    doc_dir = os.path.join(RESOURCES_DIR, "documentation")
+    if not os.path.exists(doc_dir):
+        return "Documentation directory not found."
+
+    results = []
+    query_lower = query.lower()
+    for filename in os.listdir(doc_dir):
+        if filename.endswith(".md"):
+            filepath = os.path.join(doc_dir, filename)
+            with open(filepath, "r", encoding="utf-8") as f:
+                content = f.read()
+            if query_lower in content.lower() or query_lower in filename.lower():
+                results.append(f"=== File: {filename} ===")
+                # Print first 200 chars of matching file content in logs to prevent clutter
+                print(f"DEBUG: found match in documentation file: {filename}")
+                results.append(content)
+
+    if results:
+        res_str = "\n".join(results)
+        return res_str
+    print("DEBUG: search_functional_documentation found no matches.")
+    return "No matching functional documentation found."
+

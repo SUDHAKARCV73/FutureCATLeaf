@@ -4,7 +4,8 @@ from tools.resource_tools import (
     search_application_logs,
     read_deployment_history,
     search_master_data,
-    search_knowledge_base
+    search_knowledge_base,
+    search_functional_documentation
 )
 
 def get_investigation_agent() -> Agent:
@@ -31,7 +32,8 @@ def get_investigation_agent() -> Agent:
             search_application_logs,
             read_deployment_history,
             search_master_data,
-            search_knowledge_base
+            search_knowledge_base,
+            search_functional_documentation
         ]
     )
 

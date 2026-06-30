@@ -53,7 +53,7 @@
 - Created mock files in `resources/` covering logs, deployments, master data (lot master, shift calendar), and past RCAs.
 - Implemented custom search tools in [resource_tools.py](file:///d:/AllProjects/FutureCATLeaf/tools/resource_tools.py) to read and filter these files.
 - Configured the Investigation Agent in [investigation_agent.py](file:///d:/AllProjects/FutureCATLeaf/agents/investigation_agent.py) with prompts in [investigation_agent.md](file:///d:/AllProjects/FutureCATLeaf/prompts/investigation_agent.md).
-- Updated [main.py](file:///d:/AllProjects/FutureCATLeaf/main.py) to sequentially run the **Email Processor Agent**, parse its output, run the **Investigation Agent** with the output, and print the final JSON.
+- Updated [main.py](file:///d:/AllProjects/FutureCATLeaf/main.py) to sequentially run the **Email Processor Agent**, parse its output, run the **Investigation Agent with the output, and print the final JSON.
 - Verified evidence retrieval on both plan finalization and lot printing incidents.
 
 ## [2026-06-27] Phase 2 Refinement: Evidence Schema Extension & Fallback Filtering
@@ -100,3 +100,30 @@
 - Created [review_agent.py](file:///d:/AllProjects/FutureCATLeaf/agents/review_agent.py) configuring the ADK Agent.
 - Modified [main.py](file:///d:/AllProjects/FutureCATLeaf/main.py) to print the report summary to the terminal, prompt for reviewer name, Y/N approval, and review comments, then invoke the Review Agent.
 - Verified terminal output and final JSON object formatting.
+
+## [2026-06-28] Phase 5: Functional Investigation Report Generator Implementation
+
+### Objectives
+- Build a Functional Investigation Report Generator Agent to format the finalized Incident Object into a Markdown report.
+- Save both the Markdown report and the final JSON object in the `reports/` folder.
+
+### Implementation Details
+- Created [report_generator.md](file:///d:/AllProjects/FutureCATLeaf/prompts/report_generator.md) for Markdown formatting.
+- Created [report_generator.py](file:///d:/AllProjects/FutureCATLeaf/agents/report_generator.py) configuring the ADK Agent.
+- Modified [main.py](file:///d:/AllProjects/FutureCATLeaf/main.py) to execute the report generator, save files, and print paths.
+
+## [2026-06-28] V5 Refinements: Documentation Integration & Bale Issue Resolution
+
+### Objectives
+- Search functional reference documentation under `resources/documentation/` before inspecting deployments.
+- If a functional guide contains rules for the process, include it as evidence under the `"Functional Reference Guide"` source.
+- Avoid preferring deployments unless logs/master data support it.
+- Resolve bale issues by prioritizing status validations (e.g. status 'S' Stocked vs. Quarantined) over RFID scanner defect hypotheses unless RFID is explicitly mentioned.
+- Do not automatically regenerate RCA if review comments contradict the report, keeping them visible in the generated document.
+
+### Implementation Details
+- Added `search_functional_documentation` to [resource_tools.py](file:///d:/AllProjects/FutureCATLeaf/tools/resource_tools.py) to read matching `.md` files.
+- Bound the tool to the Investigation Agent in [investigation_agent.py](file:///d:/AllProjects/FutureCATLeaf/agents/investigation_agent.py).
+- Enhanced prompt keywords and ordering constraints in [investigation_agent.md](file:///d:/AllProjects/FutureCATLeaf/prompts/investigation_agent.md) to search logs using simple atomic queries.
+- Added preference and governance rules to [rca_agent.md](file:///d:/AllProjects/FutureCATLeaf/prompts/rca_agent.md).
+- Verified the complete sequential pipeline on the bale issue `incident_unble_issue_bales_processing.txt`, yielding correct status quarantined diagnosis and Functional Reference Guide evidence.

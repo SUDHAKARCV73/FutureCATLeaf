@@ -13,6 +13,7 @@ from agents.email_processor import get_email_processor_agent
 from agents.investigation_agent import get_investigation_agent
 from agents.rca_agent import get_rca_agent
 from agents.review_agent import get_review_agent
+from agents.report_generator import get_report_generator_agent
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
@@ -250,8 +251,76 @@ async def run_pipeline(filename: str):
     if final_reviewed_output.endswith("```"):
         final_reviewed_output = final_reviewed_output[:-3]
     final_reviewed_output = final_reviewed_output.strip()
+
+    try:
+        reviewed_data = json.loads(final_reviewed_output)
+        incident_id = reviewed_data.get("incident_id", "UNKNOWN")
+        approval_status = reviewed_data.get("approval", {}).get("status", "Pending")
+    except Exception as e:
+        print("Error parsing final reviewed JSON:", e)
+        return
+
+    # ----------------------------------------------------
+    # Step 5: Run Functional Investigation Report Generator
+    # ----------------------------------------------------
+    report_agent = get_report_generator_agent()
+    session5 = await session_service.create_session(
+        app_name="FutureCATLeaf_Report",
+        user_id="user_console"
+    )
+    runner5 = Runner(
+        app_name="FutureCATLeaf_Report",
+        agent=report_agent,
+        session_service=session_service
+    )
     
-    print(final_reviewed_output)
+    user_prompt5 = f"Please generate the Markdown report for this Incident Object:\n{final_reviewed_output}"
+    user_message5 = types.Content(
+        role="user",
+        parts=[types.Part.from_text(text=user_prompt5)]
+    )
+    
+    # Execute step 5 runner
+    events5 = runner5.run(
+        user_id="user_console",
+        session_id=session5.id,
+        new_message=user_message5
+    )
+    
+    response_report = ""
+    for event in events5:
+        if event.content and event.content.parts:
+            for part in event.content.parts:
+                if part.text:
+                    response_report += part.text
+                    
+    # Clean the Markdown response
+    markdown_report = response_report.strip()
+    if markdown_report.startswith("```markdown"):
+        markdown_report = markdown_report[11:]
+    elif markdown_report.startswith("```"):
+        markdown_report = markdown_report[3:]
+    if markdown_report.endswith("```"):
+        markdown_report = markdown_report[:-3]
+    markdown_report = markdown_report.strip()
+
+    # Ensure reports directory exists
+    reports_dir = "reports"
+    os.makedirs(reports_dir, exist_ok=True)
+    
+    # Save Report & JSON Object
+    report_file_path = os.path.join(reports_dir, f"FCL_{incident_id}_Investigation_Report.md")
+    json_file_path = os.path.join(reports_dir, f"FCL_{incident_id}_Final_Object.json")
+    
+    with open(report_file_path, "w", encoding="utf-8") as f:
+        f.write(markdown_report)
+        
+    with open(json_file_path, "w", encoding="utf-8") as f:
+        f.write(final_reviewed_output)
+        
+    print(f"Report saved to: {report_file_path}")
+    print(f"JSON saved to:   {json_file_path}")
+    print(f"Approval Status: {approval_status}")
 
 def main():
     if not os.environ.get("GEMINI_API_KEY"):

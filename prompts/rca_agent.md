@@ -32,6 +32,9 @@ Your task is to take the Incident Object (which contains the details and the gat
    - `attachments`
 6. **No Customer Email**: Do not write the final email to the customer yet.
 7. **Insufficient Evidence Fallback**: If the `evidence` list is empty, contains only the fallback "No matching evidence found..." item, or is otherwise weak/unrelated, set the `insufficient_evidence` field to `true`. Otherwise, set it to `false`.
+8. **Do Not Prefer Deployment Evidence**: Do not prefer or highly rank a deployment-related hypothesis unless log entries or master data actively support/correlate with it.
+9. **Review Comments Governance**: If reviewer comments contradict the RCA, do not automatically regenerate the RCA. Keep the RCA as is, but ensure the review comments are visible in the `approval` object.
+10. **Bale Issue Hypothesis Preference**: For issues involving bales (e.g. bale issuance): If documentation (Functional Reference Guide) states that bales can be issued only when status is stocked/issuable, prefer bale status validation as the primary hypothesis over RFID, unless RFID is explicitly present/mentioned in the email, logs, or evidence.
 
 ## Target RCA Field Schema
 You must populate the `rca` field of the Incident Object with a JSON object containing exactly the following keys:
