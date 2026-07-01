@@ -214,6 +214,29 @@ This separation of responsibilities improves maintainability, explainability, an
 | Markdown | Documentation and investigation reports |
 | Git & GitHub | Version control and repository hosting |
 
+## Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| Google ADK | Multi-agent orchestration |
+| Gemini 2.5 Flash | Reasoning and report generation |
+| Python 3.11 | Application development |
+| Markdown | Documentation and investigation reports |
+| Git & GitHub | Version control and repository hosting |
+
+---
+
+## Course Concepts Demonstrated
+
+This project demonstrates the following concepts from the **Google AI Agents: Intensive Vibe Coding** course:
+
+| Course Concept | How FutureCATLeaf Demonstrates It |
+|---|---|
+| **Multi-Agent System (Google ADK)** | Implements a multi-agent workflow consisting of Email Processing, Investigation, Evidence-Based Root Cause Analysis, Human Review, and Report Generation agents. |
+| **Agent Skills (Google Agents CLI)** | Google Agents CLI was used during project scaffolding and development to accelerate the implementation workflow. |
+| **Security & Responsible AI** | Implements evidence-first reasoning, human approval, audit trail, mock enterprise data, and no automated production actions. |
+| **Antigravity IDE** | Used during iterative development and documentation refinement of the project. |
+
 ## Getting Started
 
 ### Prerequisites
@@ -343,7 +366,7 @@ Potential future enhancements include:
 
 This project was developed as part of the **Google AI Agents Intensive Course**.
 
-It demonstrates the practical application of Google ADK, Gemini models, prompt engineering, multi-agent orchestration, and responsible AI principles in an enterprise functional support scenario.
+It demonstrates the practical application of Google ADK, Gemini models,Antigravity IDE, prompt engineering, multi-agent orchestration, and responsible AI principles in an enterprise functional support scenario.
 
 ## License
 
