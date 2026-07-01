@@ -85,36 +85,26 @@ FutureCATLeaf follows an evidence-driven investigation workflow.
 
 ```mermaid
 flowchart TD
-
-A[Incident Email]
-
-B[Email Processing Agent]
-
-C[Investigation Agent]
-
-D[Evidence-Based RCA Agent]
-
-E[Human Review Agent]
-
-F[Report Generator]
-
-G[Functional Investigation Report]
-
-A --> B
-B --> C
-C --> D
-D --> E
-E --> F
-F --> G
+    A[Incident Email] --> B[Email Processing Agent]
+    B --> C[Structured Incident Object]
+    C --> D[Investigation Agent]
+    D --> E[Evidence Package]
+    E --> F[Evidence-Based RCA Agent]
+    F --> G[Human Review Agent]
+    G --> H[Report Generator]
+    H --> I[Functional Investigation Report]
+    H --> J[JSON Audit Object]
 ```
 
-| Agent                      | Responsibility                                                           |
-| -------------------------- | ------------------------------------------------------------------------ |
-| Email Processing Agent     | Converts unstructured emails into structured Incident Objects            |
-| Investigation Agent        | Collects evidence from documentation, logs, deployments, and master data |
-| Root Cause Reasoning Agent | Evaluates evidence and produces explainable RCA                          |
-| Human Review Agent         | Captures reviewer decisions and comments                                 |
-| Report Generator           | Produces professional investigation reports                              |
+### Agent Responsibilities
+
+| Agent | Responsibility |
+|---|---|
+| Email Processing Agent | Converts unstructured emails into structured Incident Objects |
+| Investigation Agent | Collects evidence from documentation, logs, deployments, and master data |
+| Evidence-Based RCA Agent | Evaluates evidence and produces explainable RCA |
+| Human Review Agent | Captures reviewer decisions and comments |
+| Report Generator | Produces professional investigation reports |
 
 ## Responsible AI
 
@@ -217,12 +207,12 @@ This separation of responsibilities improves maintainability, explainability, an
 ## Technology Stack
 
 | Technology | Purpose |
-|------------|---------|
+|---|---|
 | Google ADK | Multi-agent orchestration |
 | Gemini 2.5 Flash | Reasoning and report generation |
 | Python 3.11 | Application development |
 | Markdown | Documentation and investigation reports |
-| Git & GitHub | Version control |
+| Git & GitHub | Version control and repository hosting |
 
 ## Getting Started
 

@@ -331,11 +331,7 @@ Current capabilities include:
 
 ---
 
-# Future Enhancements
-
-Potential future improvements include:
-
-# Future Enhancements
+# Future Roadmap
 
 FutureCATLeaf is designed as a foundation that can evolve into a production-ready enterprise investigation platform. Planned enhancements include:
 
